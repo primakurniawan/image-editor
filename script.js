@@ -8,86 +8,35 @@ const downloadBtn = document.getElementById("download-btn");
 const uploadFile = document.getElementById("upload-file");
 const revertBtn = document.getElementById("revert-btn");
 const FilterSetting = document.querySelectorAll(".FilterSetting");
+const filterBtn = document.querySelectorAll(".filter-btn");
 
 // Filter & Effect Handlers
-document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("vintage-add")) {
-    Caman("#canvas", img, function () {
-      this.vintage().render();
+let effectActive;
+filterBtn.forEach((e) => {
+  e.addEventListener("click", (e) => {
+    FilterSetting.forEach((e) => {
+      e.firstElementChild.value = 0;
+      e.lastElementChild.innerText = 0;
     });
-  } else if (e.target.classList.contains("lomo-add")) {
     Caman("#canvas", img, function () {
-      this.lomo().render();
+      this.revert();
+      this[e.target.dataset.effect]().render();
     });
-  } else if (e.target.classList.contains("clarity-add")) {
-    Caman("#canvas", img, function () {
-      this.clarity().render();
+    filterBtn.forEach((e) => {
+      e.classList.remove("btn-warning");
+      e.classList.add("btn-dark");
     });
-  } else if (e.target.classList.contains("sincity-add")) {
-    Caman("#canvas", img, function () {
-      this.sinCity().render();
-    });
-  } else if (e.target.classList.contains("sunrise-add")) {
-    Caman("#canvas", img, function () {
-      this.sunrise().render();
-    });
-  } else if (e.target.classList.contains("crossprocess-add")) {
-    Caman("#canvas", img, function () {
-      this.crossProcess().render();
-    });
-  } else if (e.target.classList.contains("orangepeel-add")) {
-    Caman("#canvas", img, function () {
-      this.orangePeel().render();
-    });
-  } else if (e.target.classList.contains("love-add")) {
-    Caman("#canvas", img, function () {
-      this.love().render();
-    });
-  } else if (e.target.classList.contains("grungy-add")) {
-    Caman("#canvas", img, function () {
-      this.grungy().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  } else if (e.target.classList.contains("hermajesty-add")) {
-    Caman("#canvas", img, function () {
-      this.herMajesty().render();
-    });
-  }
+    e.target.classList.remove("btn-dark");
+    e.target.classList.add("btn-warning");
+  });
 });
 
 // Revert Filters
 revertBtn.addEventListener("click", (e) => {
+  filterBtn.forEach((e) => {
+    e.classList.add("btn-dark");
+    e.classList.remove("btn-warning");
+  });
   Caman("#canvas", img, function () {
     FilterSetting.forEach((e) => {
       e.firstElementChild.value = 0;
@@ -171,57 +120,94 @@ FilterSetting.forEach((e) => {
   e.addEventListener("change", (e) => {
     let inc = e.target.value - prevValue;
     prevValue = parseInt(e.target.value);
-    console.log(inc);
+    if (
+      e.target.dataset.filter == "red" ||
+      e.target.dataset.filter == "green" ||
+      e.target.dataset.filter == "blue"
+    ) {
+      Caman("#canvas", img, function () {
+        this.channels({
+          [e.target.dataset.filter]: inc,
+        }).render();
+      });
+    } else if (e.target.dataset.filter) {
+      Caman("#canvas", img, function () {
+        this[e.target.dataset.filter](inc).render();
+      });
+    }
     e.target.nextElementSibling.innerText = e.target.value;
-    console.log(e.target.dataset.filter);
-    if (e.target.dataset.filter == "brightness") {
+  });
+});
+
+const width = document.getElementById("width");
+const height = document.getElementById("height");
+const resize = document.getElementById("resize");
+
+resize.addEventListener("click", (e) => {
+  if (
+    parseInt(width.value) > 0 &&
+    parseInt(width.value) < 100 &&
+    parseInt(height.value) > 0 &&
+    parseInt(height.value) < 100
+  ) {
+    Caman("#canvas", img, function () {
+      this.resize({
+        width: (canvas.scrollWidth * width.value) / 100,
+        height: (canvas.scrollHeight * height.value) / 100,
+      }).render();
+    });
+  } else {
+    let str = `<div class="my-3 alert alert-warning alert-dismissible fade show" role="alert">
+    Input Width or Height Invalid
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>`;
+    uploadFile.insertAdjacentHTML("afterend", str);
+  }
+});
+
+const colorize = document.getElementById("colorize");
+const color = document.getElementById("color");
+const opacity = document.getElementById("opacity");
+
+colorize.addEventListener("click", (e) => {
+  opacity.nextElementSibling.innerText = 0;
+  Caman("#canvas", img, function () {
+    this.colorize(color.value, parseInt(opacity.value)).render();
+  });
+  // opacity.value = 0;
+});
+
+const crop = document.getElementById("crop");
+crop.addEventListener("click", (e) => {
+  let pos = [];
+  let str = `<div class="my-3 alert alert-warning alert-dismissible fade show" role="alert">
+    Click the border from top right bottom left
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>`;
+  uploadFile.insertAdjacentHTML("afterend", str);
+  canvas.addEventListener("click", (e) => {
+    pos.push({ x: getMousePos(canvas, e).x, y: getMousePos(canvas, e).y });
+    if (pos.length == 4) {
       Caman("#canvas", img, function () {
-        this.brightness(inc).render();
-      });
-    } else if (e.target.dataset.filter == "contrast") {
-      Caman("#canvas", img, function () {
-        this.contrast(inc).render();
-      });
-    } else if (e.target.dataset.filter == "saturation") {
-      Caman("#canvas", img, function () {
-        this.saturation(inc).render();
-      });
-    } else if (e.target.dataset.filter == "vibrance") {
-      Caman("#canvas", img, function () {
-        this.vibrance(inc).render();
-      });
-    } else if (e.target.dataset.filter == "exposure") {
-      Caman("#canvas", img, function () {
-        this.exposure(inc).render();
-      });
-    } else if (e.target.dataset.filter == "hue") {
-      Caman("#canvas", img, function () {
-        this.hue(inc).render();
-      });
-    } else if (e.target.dataset.filter == "sepia") {
-      Caman("#canvas", img, function () {
-        this.sepia(inc).render();
-      });
-    } else if (e.target.dataset.filter == "gamma") {
-      Caman("#canvas", img, function () {
-        this.gamma(inc).render();
-      });
-    } else if (e.target.dataset.filter == "noise") {
-      Caman("#canvas", img, function () {
-        this.noise(inc).render();
-      });
-    } else if (e.target.dataset.filter == "clip") {
-      Caman("#canvas", img, function () {
-        this.clip(inc).render();
-      });
-    } else if (e.target.dataset.filter == "sharpen") {
-      Caman("#canvas", img, function () {
-        this.sharpen(inc).render();
-      });
-    } else if (e.target.dataset.filter == "stackBlur") {
-      Caman("#canvas", img, function () {
-        this.stackBlur(inc).render();
+        this.crop(
+          pos[1].x - pos[3].x,
+          pos[2].y - pos[0].y,
+          pos[3].x,
+          pos[0].y
+        ).render();
       });
     }
   });
 });
+
+function getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width,
+    y: ((e.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height,
+  };
+}

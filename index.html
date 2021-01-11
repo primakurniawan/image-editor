@@ -18,15 +18,191 @@
         <div class="col-md-8 m-auto">
           <div class="custom-file mb-3">
             <input type="file" class="custom-file-input" id="upload-file" />
+
             <label for="upload-file" class="custom-file-label"
               >Choose Image</label
             >
           </div>
-          <canvas id="canvas"></canvas>
 
+          <canvas id="canvas" class="mt-3"></canvas>
+
+          <h4 class="text-center my-3">Resize and Crop</h4>
+          <div class="row mb-5">
+            <div class="col-md-6">
+              <!-- Button trigger modal -->
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                data-toggle="modal"
+                data-target="#exampleModal"
+              >
+                Resize
+              </button>
+            </div>
+            <div class="col-md-6">
+              <button id="crop" type="button" class="btn btn-primary btn-block">
+                crop
+              </button>
+            </div>
+          </div>
+
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Resize</h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id=""
+                        >Width and Height in %</span
+                      >
+                    </div>
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Width"
+                      id="width"
+                    />
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Height"
+                      id="height"
+                    />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="resize"
+                    data-dismiss="modal"
+                  >
+                    Resize
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
           <h4 class="text-center my-3">Filters</h4>
 
           <div id="Filters" class="row my-4 text-center">
+            <div class="col-md-3 my-1">
+              <div class="mb-3">
+                <div class="FilterName">
+                  <p>color</p>
+                </div>
+                <input
+                  type="color"
+                  class="form-control"
+                  placeholder="Color"
+                  aria-label="Color"
+                  aria-describedby="basic-addon1"
+                  id="color"
+                />
+              </div>
+              <div class="mb-3">
+                <div class="FilterName">
+                  <p>opacity</p>
+                </div>
+                <div class="FilterSetting">
+                  <input
+                    type="range"
+                    id="opacity"
+                    value="0"
+                    min="0"
+                    max="100"
+                    step="1"
+                  />
+                  <span class="FilterValue">0</span>
+                </div>
+              </div>
+
+              <button
+                id="colorize"
+                type="button"
+                class="btn btn-primary btn-block"
+              >
+                colorize
+              </button>
+            </div>
+
+            <div class="Filter col-md-3 my-1">
+              <div class="FilterName">
+                <p>red</p>
+              </div>
+
+              <div class="FilterSetting">
+                <input
+                  type="range"
+                  min="-100"
+                  max="100"
+                  step="1"
+                  value="0"
+                  data-filter="red"
+                />
+                <span class="FilterValue">0</span>
+              </div>
+            </div>
+            <div class="Filter col-md-3 my-1">
+              <div class="FilterName">
+                <p>green</p>
+              </div>
+
+              <div class="FilterSetting">
+                <input
+                  type="range"
+                  min="-100"
+                  max="100"
+                  step="1"
+                  value="0"
+                  data-filter="green"
+                />
+                <span class="FilterValue">0</span>
+              </div>
+            </div>
+            <div class="Filter col-md-3 my-1">
+              <div class="FilterName">
+                <p>blue</p>
+              </div>
+
+              <div class="FilterSetting">
+                <input
+                  type="range"
+                  min="-100"
+                  max="100"
+                  step="1"
+                  value="0"
+                  data-filter="blue"
+                />
+                <span class="FilterValue">0</span>
+              </div>
+            </div>
             <div class="Filter col-md-3 my-1">
               <div class="FilterName">
                 <p>brightness</p>
@@ -250,28 +426,43 @@
 
           <div class="row mb-3">
             <div class="col-md-3 my-1">
-              <button class="filter-btn vintage-add btn btn-dark btn-block">
+              <button
+                class="filter-btn vintage-add btn btn-dark btn-block"
+                data-effect="vintage"
+              >
                 Vintage
               </button>
             </div>
             <div class="col-md-3 my-1">
-              <button class="filter-btn lomo-add btn btn-dark btn-block">
+              <button
+                class="filter-btn lomo-add btn btn-dark btn-block"
+                data-effect="lomo"
+              >
                 Lomo
               </button>
             </div>
             <div class="col-md-3 my-1">
-              <button class="filter-btn clarity-add btn btn-dark btn-block">
+              <button
+                class="filter-btn clarity-add btn btn-dark btn-block"
+                data-effect="clarity"
+              >
                 Clarity
               </button>
             </div>
             <div class="col-md-3 my-1">
-              <button class="filter-btn sincity-add btn btn-dark btn-block">
+              <button
+                class="filter-btn sincity-add btn btn-dark btn-block"
+                data-effect="sinCity"
+              >
                 Sin City
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn sunrise-add btn btn-dark btn-block">
+              <button
+                class="filter-btn sunrise-add btn btn-dark btn-block"
+                data-effect="sunrise"
+              >
                 Sunrise
               </button>
             </div>
@@ -279,80 +470,125 @@
             <div class="col-md-3 my-1">
               <button
                 class="filter-btn crossprocess-add btn btn-dark btn-block"
+                data-effect="crossProcess"
               >
                 Cross Process
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn orangepeel-add btn btn-dark btn-block">
+              <button
+                class="filter-btn orangepeel-add btn btn-dark btn-block"
+                data-effect="orangePeel"
+              >
                 Orange Peel
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn love-add btn btn-dark btn-block">
+              <button
+                class="filter-btn love-add btn btn-dark btn-block"
+                data-effect="love"
+              >
                 Love
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn grungy-add btn btn-dark btn-block">
+              <button
+                class="filter-btn grungy-add btn btn-dark btn-block"
+                data-effect="grungy"
+              >
                 Grungy
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn jarques-add btn btn-dark btn-block">
+              <button
+                class="filter-btn jarques-add btn btn-dark btn-block"
+                data-effect="jarques"
+              >
                 Jarques
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn pinhole-add btn btn-dark btn-block">
+              <button
+                class="filter-btn pinhole-add btn btn-dark btn-block"
+                data-effect="pinhole"
+              >
                 Pinhole
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn glowingsun-add btn btn-dark btn-block">
+              <button
+                class="filter-btn glowingsun-add btn btn-dark btn-block"
+                data-effect="glowingSun"
+              >
                 Glowing Sun
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn hazydays-add btn btn-dark btn-block">
+              <button
+                class="filter-btn hazydays-add btn btn-dark btn-block"
+                data-effect="hazyDays"
+              >
                 Hazy Days
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn hermajesty-add btn btn-dark btn-block">
+              <button
+                class="filter-btn hermajesty-add btn btn-dark btn-block"
+                data-effect="herMajesty"
+              >
                 Her Majesty
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn nostalgia-add btn btn-dark btn-block">
+              <button
+                class="filter-btn nostalgia-add btn btn-dark btn-block"
+                data-effect="nostalgia"
+              >
                 Nostalgia
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn hemingway-add btn btn-dark btn-block">
+              <button
+                class="filter-btn hemingway-add btn btn-dark btn-block"
+                data-effect="hemingway"
+              >
                 Hemingway
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn concentrate-add btn btn-dark btn-block">
+              <button
+                class="filter-btn concentrate-add btn btn-dark btn-block"
+                data-effect="concentrate"
+              >
                 Concentrate
               </button>
             </div>
 
             <div class="col-md-3 my-1">
-              <button class="filter-btn oldboot-add btn btn-dark btn-block">
+              <button
+                class="filter-btn oldboot-add btn btn-dark btn-block"
+                data-effect="oldBoot"
+              >
                 Old Boot
+              </button>
+            </div>
+            <div class="col-md-3 my-1">
+              <button
+                class="filter-btn oldboot-add btn btn-dark btn-block"
+                data-effect="invert"
+              >
+                Invert
               </button>
             </div>
           </div>
@@ -373,7 +609,23 @@
       </div>
     </div>
 
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
     <script src="./caman.full.min.js"></script>
+
     <script src="./script.js"></script>
   </body>
 </html>
